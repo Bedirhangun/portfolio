@@ -1,0 +1,277 @@
+---
+import '../styles/global.css';
+
+const projects = [
+  {
+    title: 'FAST Ödeme Entegrasyonu',
+    description:
+      'TCMB FAST anlık ödeme sistemi için mesaj işleme, doğrulama ve simülasyon altyapısı. Gelen/giden ödeme akışları, SignalR ile gerçek zamanlı izleme.',
+    tags: ['.NET', 'C#', 'SignalR', 'RabbitMQ'],
+    link: null,
+  },
+  {
+    title: 'KOLAS Adres Yönetimi',
+    description:
+      'Kolay Adresleme Sistemi (KOLAS) entegrasyonu — adres kaydı, sorgulama geçmişi ve BKM istemci sertifika yönetimi.',
+    tags: ['.NET', 'PostgreSQL', 'mTLS'],
+    link: null,
+  },
+  {
+    title: 'Açık Bankacılık Platformu',
+    description:
+      'Mikroservis mimarisiyle ASPSP/TPP servisleri, kimlik doğrulama sunucusu ve Angular yönetim paneli.',
+    tags: ['Angular', '.NET', 'Mikroservis', 'OAuth2'],
+    link: null,
+  },
+];
+
+const skills = [
+  'C# / .NET',
+  'ASP.NET Core',
+  'Angular',
+  'TypeScript',
+  'PostgreSQL',
+  'RabbitMQ',
+  'Docker',
+  'Mobil Uygulama Geliştirme',
+];
+---
+
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bedirhan Gündöner — Yazılım Geliştirici</title>
+    <meta
+      name="description"
+      content="Fintech ve ödeme sistemleri üzerine çalışan full-stack yazılım geliştirici. .NET, Angular ve mobil uygulamalar."
+    />
+  </head>
+  <body>
+    <header class="nav">
+      <div class="container nav-inner">
+        <span class="logo">BG</span>
+        <nav>
+          <a href="#projeler">Projeler</a>
+          <a href="#yetenekler">Yetenekler</a>
+          <a href="#iletisim">İletişim</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <p class="hero-kicker">Merhaba, ben</p>
+          <h1>Bedirhan Gündöner</h1>
+          <p class="hero-sub">
+            Fintech ve ödeme sistemleri üzerine çalışan full-stack yazılım
+            geliştirici. Anlık ödeme altyapıları, açık bankacılık servisleri ve
+            mobil uygulamalar geliştiriyorum.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#projeler">Projelerime Bak</a>
+            <a class="btn btn-ghost" href="mailto:bedirhangndnr@gmail.com"
+              >İletişime Geç</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <section id="projeler">
+        <div class="container">
+          <h2 class="section-title">Projeler</h2>
+          <p class="section-sub">Üzerinde çalıştığım bazı işler.</p>
+          <div class="grid">
+            {
+              projects.map((p) => (
+                <article class="card">
+                  <h3>{p.title}</h3>
+                  <p>{p.description}</p>
+                  <div class="tags">
+                    {p.tags.map((t) => (
+                      <span class="tag">{t}</span>
+                    ))}
+                  </div>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+      </section>
+
+      <section id="yetenekler" class="alt">
+        <div class="container">
+          <h2 class="section-title">Yetenekler</h2>
+          <p class="section-sub">Günlük olarak kullandığım teknolojiler.</p>
+          <div class="tags tags-lg">
+            {skills.map((s) => <span class="tag">{s}</span>)}
+          </div>
+        </div>
+      </section>
+
+      <section id="iletisim">
+        <div class="container">
+          <h2 class="section-title">İletişim</h2>
+          <p class="section-sub">
+            Bir proje fikriniz mi var? Bana e-posta ile ulaşabilirsiniz.
+          </p>
+          <a class="btn btn-primary" href="mailto:bedirhangndnr@gmail.com"
+            >bedirhangndnr@gmail.com</a
+          >
+          <p class="footer-links">
+            <a href="https://github.com/Bedirhangun" target="_blank" rel="noopener"
+              >GitHub</a
+            >
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>© {new Date().getFullYear()} Bedirhan Gündöner</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(12px);
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .logo {
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--accent);
+  }
+  .nav nav a {
+    color: var(--text-muted);
+    margin-left: 22px;
+    font-size: 0.95rem;
+    transition: color 0.15s;
+  }
+  .nav nav a:hover {
+    color: var(--text);
+  }
+
+  .hero {
+    padding: 120px 0 96px;
+  }
+  .hero-kicker {
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 6vw, 3.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .hero-sub {
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    max-width: 560px;
+    margin-bottom: 32px;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-ghost {
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .alt {
+    background: var(--bg-soft);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .card h3 {
+    font-size: 1.1rem;
+  }
+  .card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    flex: 1;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .tags-lg .tag {
+    font-size: 0.95rem;
+    padding: 8px 18px;
+  }
+
+  .footer-links {
+    margin-top: 24px;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+</style>
