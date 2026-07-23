@@ -29,41 +29,55 @@ yazılımı yok. Bir web sunucusunun dosyaları olduğu gibi servis etmesi yeter
 Alternatifler: düz HTML yazmak (küçük kalırsa yeterli ama tekrar çoğalır),
 Next.js (bu iş için gereksiz ağır).
 
-### Barındırma: Neden Cloudflare Pages, neden kendi sunucumuz değil?
+### Barındırma: Neden GitHub Pages, neden kendi sunucumuz değil?
 
-| | Cloudflare Pages | Kendi VPS'imiz |
+| | GitHub Pages | Kendi VPS'imiz |
 |---|---|---|
 | Maliyet | Ücretsiz | ~€5/ay |
 | SSL sertifikası | Otomatik | Bizim işimiz (Caddy halleder) |
-| Dünya geneli hız (CDN) | Var, otomatik | Yok (tek lokasyon) |
+| CDN | Var (Fastly altyapısı) | Yok (tek lokasyon) |
 | Bakım | Sıfır | İşletim sistemi güncellemeleri bizde |
 
-Statik site için VPS harcamaya değmez. **VPS'i mobil uygulama backend'leri için
-saklıyoruz** — onlar çalışan process gerektirdiği için Pages'te barınamaz.
-(Bkz. bölüm 5: hedef mimari.)
+Statik site için VPS harcamaya değmez. Kod zaten GitHub'da durduğu için Pages
+en az parçalı çözüm: ayrı hesap, ayrı panel yok. **VPS'i mobil uygulama
+backend'leri için saklıyoruz** — onlar çalışan process gerektirdiği için
+Pages'te barınamaz. (Bkz. bölüm 5: hedef mimari.)
+
+Not: Cloudflare Pages / Netlify de aynı işi görür; GitHub hesabından başka
+hesap gerektirmediği için GitHub Pages'i seçtik.
+
+### Adres ve `base` ayarı
+
+Site `https://bedirhangun.github.io/portfolio/` altında yayınlanır — yani kök
+dizinde değil, `/portfolio` alt yolundadır. Bu yüzden `astro.config.mjs`
+içinde `base: '/portfolio'` tanımlı; CSS ve link yolları buna göre üretilir.
+İleride kendi domain'ini bağlarsan (`bedirhangundoner.dev` gibi) `base`
+satırını silmen gerekir.
 
 ---
 
 ## 2. Deploy süreci: Push'tan yayına ne oluyor?
 
+Tanım dosyası: [.github/workflows/deploy.yml](../.github/workflows/deploy.yml)
+
 ```
 git push (main)
    │
    ▼
-GitHub  ──webhook──▶  Cloudflare Pages
-                          │  1. repo'yu klonlar
-                          │  2. npm install && npm run build çalıştırır
-                          │  3. dist/ içeriğini CDN'ine dağıtır
-                          ▼
-                      https://<proje>.pages.dev  (ve bağlıysa kendi domain)
+GitHub Actions (deploy.yml tetiklenir)
+   │  1. build job: repo'yu klonlar, npm install && astro build çalıştırır
+   │     (withastro/action bu iki adımı paketler), dist/'i artifact olarak yükler
+   │  2. deploy job: artifact'i GitHub Pages'e dağıtır
+   ▼
+https://bedirhangun.github.io/portfolio/
 ```
 
 Buna **CI/CD** denir: kod push'lanınca build ve yayın otomatik tetiklenir.
 Elle hiçbir dosya kopyalanmaz; "sunucuya dosya atmayı unutmak" diye bir hata
-sınıfı yoktur. Ayrıca her PR/branch için otomatik önizleme URL'i oluşur.
+sınıfı yoktur. Çalışan/biten işleri repo'nun **Actions** sekmesinden izlersin.
 
-**Rollback:** Cloudflare Pages panelinde eski deploy'lardan birine "Rollback"
-diyebilirsin; ya da git'te `git revert` ile kötü commit'i geri alıp push'larsın.
+**Rollback:** `git revert <kötü-commit>` + push — Actions eski hali yeniden
+yayınlar. (Actions sekmesinden eski bir başarılı run'ı "Re-run" yapmak da olur.)
 
 ---
 
@@ -99,6 +113,28 @@ gerekmez; `main`'e push atan herkes yayınlamış olur.
 4. **Save and Deploy** — 1-2 dakikada `https://<proje>.pages.dev` yayında.
 5. Kendi domain'i bağlamak: proje → **Custom domains → Set up a custom domain**.
    Domain Cloudflare'deyse DNS kaydı otomatik eklenir, SSL otomatik gelir.
+
+---
+
+## 3b. Yeni bir projeyi aynı şekilde yayınlamak
+
+Repo'daki [`scripts/publish-site.sh`](../scripts/publish-site.sh) bu akışın
+tamamını tek komuta indirir:
+
+```bash
+./scripts/publish-site.sh ~/Documents/GitHub/yeni-proje
+```
+
+Script sırasıyla: git repo başlatır → GitHub'da repo oluşturur (keychain'deki
+token'la, tarayıcı gerekmez) → Astro projesiyse Pages workflow'unu ekler →
+push'lar → GitHub Pages'i etkinleştirir. Birkaç dakika sonra site
+`https://<kullanıcı>.github.io/<repo-adı>/` adresinde yayındadır.
+
+Tek elle yapılacak şey: Astro projelerinde `astro.config.mjs` içine
+`base: '/<repo-adı>'` eklemek (script hatırlatır).
+
+> Not: Backend gerektiren projeler (API, veritabanı) GitHub Pages'te
+> **çalışmaz** — onlar için bölüm 5'teki VPS mimarisi gerekir.
 
 ---
 
